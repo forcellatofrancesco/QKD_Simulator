@@ -1,0 +1,8 @@
+{
+    "packets" : [
+        {
+            "src_node" : "node0",
+            "dst_node" : "node3"
+        }
+    ]
+}

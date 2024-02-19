@@ -1,0 +1,108 @@
+{
+    "nodes": [
+        {
+            "name": "node0",
+            "type": "QKDNode"
+        },
+        {
+            "name": "node1",
+            "type": "QKDNode"
+        },
+        {
+            "name": "node2",
+            "type": "QKDNode"
+        },
+        {
+            "name": "node3",
+            "type": "QKDNode"
+        }
+    ],
+    "qchannels": [
+        {
+            "name": "qchannel0_0to1",
+            "source": "node0",
+            "destination": "node1",
+            "distance": 4000,
+            "bit_rate" : 1000000
+        },
+        {
+            "name": "qchannel0_1to0",
+            "source": "node1",
+            "destination": "node0",
+            "distance": 4000,
+            "bit_rate" : 1000000
+        },
+        {
+            "name": "qchannel1_1to2",
+            "source": "node1",
+            "destination": "node2",
+            "distance": 4000,
+            "bit_rate" : 1000000
+        },
+        {
+            "name": "qchannel1_2to1",
+            "source": "node2",
+            "destination": "node1",
+            "distance": 4000,
+            "bit_rate" : 1000000
+        },
+        {
+            "name": "qchannel3_2to3",
+            "source": "node2",
+            "destination": "node3",
+            "distance": 4000,
+            "bit_rate" : 1000000
+        },
+        {
+            "name": "qchannel3_3to2",
+            "source": "node3",
+            "destination": "node2",
+            "distance": 4000,
+            "bit_rate" : 1000000
+        }
+    ],
+    "cchannels": [
+        {
+            "name": "cchannel0_0to1",
+            "source": "node0",
+            "destination": "node1",
+            "distance": 1000,
+            "bit_rate" : 20000000
+        },
+        {
+            "name": "cchannel0_1to0",
+            "source": "node1",
+            "destination": "node0",
+            "distance": 1000,
+            "bit_rate" : 20000000
+        },
+        {
+            "name": "cchannel1_1to2",
+            "source": "node1",
+            "destination": "node2",
+            "distance": 1000,
+            "bit_rate" : 20000000
+        },
+        {
+            "name": "cchannel1_2to1",
+            "source": "node2",
+            "destination": "node1",
+            "distance": 1000,
+            "bit_rate" : 20000000
+        },
+        {
+            "name": "cchannel2_2to3",
+            "source": "node2",
+            "destination": "node3",
+            "distance": 1000,
+            "bit_rate" : 20000000
+        },
+        {
+            "name": "cchannel2_3to2",
+            "source": "node3",
+            "destination": "node2",
+            "distance": 1000,
+            "bit_rate" : 20000000
+        }
+    ]
+}

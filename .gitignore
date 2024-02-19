@@ -1,0 +1,5 @@
+__pycache__
+project/sim/**/
+project/simulations/**/
+project/file/**/
+.venv

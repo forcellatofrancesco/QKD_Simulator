@@ -1,0 +1,212 @@
+{
+    "directed": false,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "type": "T",
+            "id": 0
+        },
+        {
+            "type": "T",
+            "id": 1
+        },
+        {
+            "type": "T",
+            "id": 2
+        },
+        {
+            "type": "T",
+            "id": 3
+        },
+        {
+            "type": "M",
+            "peers": 0,
+            "id": 4
+        },
+        {
+            "type": "M",
+            "peers": 0,
+            "id": 5
+        },
+        {
+            "type": "CP",
+            "peers": 0,
+            "id": 6
+        },
+        {
+            "type": "C",
+            "peers": 0,
+            "id": 7
+        },
+        {
+            "type": "C",
+            "peers": 0,
+            "id": 8
+        },
+        {
+            "type": "C",
+            "peers": 0,
+            "id": 9
+        },
+        {
+            "type": "C",
+            "peers": 0,
+            "id": 10
+        },
+        {
+            "type": "C",
+            "peers": 0,
+            "id": 11
+        },
+        {
+            "type": "C",
+            "peers": 0,
+            "id": 12
+        },
+        {
+            "type": "C",
+            "peers": 0,
+            "id": 13
+        },
+        {
+            "type": "C",
+            "peers": 0,
+            "id": 14
+        }
+    ],
+    "links": [
+        {
+            "type": "peer",
+            "customer": "none",
+            "source": 0,
+            "target": 1
+        },
+        {
+            "type": "peer",
+            "customer": "none",
+            "source": 0,
+            "target": 2
+        },
+        {
+            "type": "peer",
+            "customer": "none",
+            "source": 0,
+            "target": 3
+        },
+        {
+            "type": "transit",
+            "customer": "4",
+            "source": 0,
+            "target": 4
+        },
+        {
+            "type": "transit",
+            "customer": "12",
+            "source": 0,
+            "target": 12
+        },
+        {
+            "type": "peer",
+            "customer": "none",
+            "source": 1,
+            "target": 2
+        },
+        {
+            "type": "peer",
+            "customer": "none",
+            "source": 1,
+            "target": 3
+        },
+        {
+            "type": "peer",
+            "customer": "none",
+            "source": 2,
+            "target": 3
+        },
+        {
+            "type": "transit",
+            "customer": "5",
+            "source": 2,
+            "target": 5
+        },
+        {
+            "type": "transit",
+            "customer": "8",
+            "source": 2,
+            "target": 8
+        },
+        {
+            "type": "transit",
+            "customer": "9",
+            "source": 2,
+            "target": 9
+        },
+        {
+            "type": "transit",
+            "customer": "4",
+            "source": 3,
+            "target": 4
+        },
+        {
+            "type": "transit",
+            "customer": "5",
+            "source": 3,
+            "target": 5
+        },
+        {
+            "type": "transit",
+            "customer": "6",
+            "source": 3,
+            "target": 6
+        },
+        {
+            "type": "transit",
+            "customer": "10",
+            "source": 3,
+            "target": 10
+        },
+        {
+            "type": "transit",
+            "customer": "13",
+            "source": 3,
+            "target": 13
+        },
+        {
+            "type": "transit",
+            "customer": "5",
+            "source": 4,
+            "target": 5
+        },
+        {
+            "type": "transit",
+            "customer": "6",
+            "source": 4,
+            "target": 6
+        },
+        {
+            "type": "transit",
+            "customer": "7",
+            "source": 4,
+            "target": 7
+        },
+        {
+            "type": "transit",
+            "customer": "14",
+            "source": 4,
+            "target": 14
+        },
+        {
+            "type": "transit",
+            "customer": "6",
+            "source": 5,
+            "target": 6
+        },
+        {
+            "type": "transit",
+            "customer": "11",
+            "source": 5,
+            "target": 11
+        }
+    ]
+}

@@ -1,0 +1,44 @@
+{
+    "nodes": [
+        {
+            "name": "node0",
+            "type": "QKDNode"
+        },
+        {
+            "name": "node1",
+            "type": "QKDNode"
+        }
+    ],
+    "qchannels": [
+        {
+            "name": "qchannel0_0to1",
+            "source": "node0",
+            "destination": "node1",
+            "distance": 1000,
+            "bit_rate" : 50000000
+        },
+        {
+            "name": "qchannel0_1to0",
+            "source": "node1",
+            "destination": "node0",
+            "distance": 1000,
+            "bit_rate" : 50000000
+        }
+    ],
+    "cchannels": [
+        {
+            "name": "cchannel0_0to1",
+            "source": "node0",
+            "destination": "node1",
+            "distance": 1000,
+            "bit_rate" : 50000000
+        },
+        {
+            "name": "cchannel0_1to0",
+            "source": "node1",
+            "destination": "node0",
+            "distance": 1000,
+            "bit_rate" : 50000000
+        }
+    ]
+}
