@@ -1,0 +1,234 @@
+\documentclass[a4pape, oneside]{book}
+
+\usepackage[english]{babel}
+\usepackage[bottom=8em]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{vhistory}
+\usepackage{awesomebox}
+\usepackage[type={CC}, modifier={by-sa}, version={4.0}]{doclicense}
+
+
+\usepackage{ifluatex}
+\ifluatex
+%% Ved bruk av lualatex %%
+\usepackage{fontspec}
+\setmainfont{Linux Libertine O}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\else
+%% Ved bruk av pdflatex %%
+\usepackage[utf8]{inputenc}
+\usepackage{libertine} % linux libertine font
+%\usepackage[libertine]{newtxmath}
+\usepackage[T1]{fontenc}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\fi
+
+\usepackage{parskip}
+\usepackage{xcolor}
+\usepackage{lipsum}
+\usepackage{calc}
+\usepackage[labelfont=bf,textfont=normal,justification=justified,singlelinecheck=false,width=0.9\textwidth]{caption}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{rotating}
+\usepackage{tabularx}
+
+\usepackage{fancyhdr}
+\usepackage{placeins} % enables \FloatBarrier command
+\usepackage{floatrow} % centers images by default
+\usepackage[bottom]{footmisc} % footnotes always at bottom page
+\usepackage[noend, noline,linesnumbered,boxed]{algorithm2e}
+\usepackage{listings} % for shell snippets
+\lstset{basicstyle=\ttfamily,
+	showstringspaces=false,
+	commentstyle=\color{red},
+	keywordstyle=\color{blue},
+	numbers=left,
+	captionpos=b,
+	frame=lines
+}
+
+
+\definecolor{CaFoscariYellow}{HTML}{FFC700}             % Neurtal red, good for dark or light bg
+\definecolor{CaFoscariGray}{HTML}{333333}               % Darker gray
+\definecolor{CaFoscariRed}{HTML}{AF0539}                % Red
+\definecolor{CaFoscariPurple}{HTML}{852d93}             % Red
+\definecolor{CaFoscariBlue}{HTML}{317ea8}           % Blue
+\definecolor{CaFoscariGreen}{HTML}{879a00}  
+
+
+\usepackage{sectsty}
+\graphicspath{{images/}}
+\chapterfont{\color{CaFoscariRed}}  % sets colour of chapters
+\sectionfont{\color{CaFoscariRed}}  % sets colour of sections
+\subsectionfont{\color{CaFoscariRed}}  % sets colour of sections
+
+\usepackage[colorlinks, citecolor=black, linkcolor=black, urlcolor=black]{hyperref}
+\usepackage{cleveref}
+\usepackage{subfig}
+
+\usepackage{fancyvrb}
+\usepackage{wrapfig}
+\usepackage{imakeidx}
+
+\makeindex
+\makeindex[title=Index of Definitions]
+%\DefineVerbatimEnvironment{Terminal}{Verbatim}
+%{xleftmargin=\parindent,xrightmargin=\parindent,fontsize=\footnotesize}
+%\newenvironment{terminalenv}[2]%
+%{
+%	 \begin{figure}
+%	 \caption{#1}
+%	 \label{#2}
+%	 \begin{Terminal}
+%}{
+%     \end{Terminal}
+%     \end{figure}
+%}
+
+
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\ii}{\item}
+	
+\newcommand{\bd}{\begin{description}}
+\newcommand{\ed}{\end{description}}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\lnx}{GNU/Linux\xspace}
+
+
+% Flere figurer per side etc
+\renewcommand{\topfraction}{0.95}	% max fraction of floats at top
+\renewcommand{\bottomfraction}{0.95}	% max fraction of floats at bottom
+\renewcommand{\textfraction}{0.05}	% allow minimal text w. figs
+\renewcommand{\floatpagefraction}{.8} %only pages with more than 80% of floats, will become pure float-only pages. The default is 0.6
+
+
+\title{Network Security Project:\\ QKD Routing Enhancement} %Title to edit 
+\newcommand{\subtitle}{Year 2024/2025} 
+\newcommand{\docabstract}{\lipsum*[2]} 
+\newcommand{\version}{Version \vhCurrentVersion} 
+
+\author{
+    Giovanni Ostanello\\%
+    \texttt{892631@stud.unive.it}\\[0.8em]%
+    Matteo Schiocchet\\%
+    \texttt{889536@stud.unive.it}\\[0.8em]%
+    Francesco Forcellato\\%
+    \texttt{875290@stud.unive.it}\\[0.8em]%
+    Jan Halas\\%
+    \texttt{1002004@stud.unive.it}%
+}
+
+
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{epigraph}
+
+\renewcommand\epigraphflush{flushright}
+\renewcommand\epigraphsize{\normalsize}
+\setlength\epigraphwidth{0.7\textwidth}
+
+
+\DeclareFixedFont{\titlefont}{T1}{ppl}{}{}{0.5in}
+\DeclareFixedFont{\subtitlefont}{T1}{ppl}{}{}{0.2in}
+
+\makeatletter                       
+\def\printauthor{{\large \@author}}
+\let\printtitle\@title
+\makeatother
+
+
+\newcommand\titlepagedecoration{%
+	\begin{tikzpicture}[overlay]%[remember picture,overlay,shorten >= -10pt]
+	%\draw[opacity=0.05,white, fill=skde] (-15,20) circle (125pt);
+	\draw[opacity=0.15,white, fill=CaFoscariRed] (2,20) circle (4cm);
+	\draw[opacity=0.1,white, fill=CaFoscariBlue] (2,8) circle (4cm);
+	\draw[opacity=0.1,white, fill=CaFoscariBlue] (-10,8) circle (4cm);
+	\draw[opacity=0.1,white, fill=CaFoscariBlue] (2,-4) circle (4cm);
+	\end{tikzpicture}%
+}
+
+\usepackage[explicit]{titlesec}
+\definecolor{secondcolor}{RGB}{0,106,168}
+
+%\renewcommand{\thesection}{\thechapter\Alph{section}}
+%\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+
+\titleformat{\chapter}
+{\fontsize{18}{20}\selectfont\color{white}\bfseries}
+{\llap{\smash{\parbox[t]{2em}{\raggedleft%
+				\colorbox{secondcolor}{%
+					\makebox[2em-2\fboxsep\relax][r]{%
+						\hfill\strut\thechapter
+					}%
+				}\\[2ex]
+		}}\hspace*{0.5em}}%
+}
+{0em}
+{\colorbox{CaFoscariRed}{\parbox[t]{\textwidth-2\fboxsep\relax}{\strut#1}}}
+
+\titleformat{\section}
+{\fontsize{14}{16}\selectfont\color{white}\bfseries}
+{\hspace*{2.5em}\llap{\smash{\parbox[t]{2em}{\raggedleft%
+				\colorbox{secondcolor}{%
+					\makebox[2em-2\fboxsep\relax][r]{%
+						\strut\hfill\strut\thesection
+					}%
+				}\\[2ex]
+		}}\hspace*{0.5em}}%
+}
+{0em}
+{\colorbox{CaFoscariRed}{\parbox[t]{\textwidth - 2.5em - 2\fboxsep\relax}{\strut#1}}}
+
+\titleformat{\subsection}
+{\fontsize{12}{14}\selectfont\color{white}\bfseries}
+{\hspace*{3em}\llap{\smash{\parbox[t]{3em}{\raggedleft%
+				\colorbox{secondcolor}{%
+					\makebox[3em-2\fboxsep\relax][r]{%
+						\strut\hfill\strut\thesubsection
+					}%
+				}\\[2ex]
+		}}\hspace*{0.5em}}%
+}
+{0em}
+{\colorbox{CaFoscariRed}{\parbox[t]{\textwidth - 3em - 2\fboxsep\relax}{\strut#1}}}
+
+
+\newcommand{\definition}[2]{\awesomebox[violet]{2pt}{\faEdit}{violet}{\textbf{#1: }{#2}\index{#1}}}
+\newcommand{\question}[2]{\awesomebox[orange]{2pt}{\faQuestion}{orange}{\textbf{#1 }{#2}}}
+\newcommand{\nquestion}[3]{\awesomebox[orange]{2pt}{\faQuestion$_\text{#3}$}{orange}{\textbf{#1 }{#2}}}
+%\newcommand{\infobox}[3]{\awesomebox[orange]{2pt}{\faQuestion$_\text{#3}$}{orange}{\textbf{#1 }{#2}}}
+\date{\today}
+
+
+
+\begin{document}
+
+\input{titlepage}
+
+\input{license}
+
+\tableofcontents
+
+\addtocounter{page}{1}
+
+\input{chapters/introduction.tex}
+
+\input{chapters/work_division.tex}
+
+\input{chapters/work_description.tex}
+
+\input{chapters/conclusions.tex}
+
+\input{chapters/end.tex}
+
+%\tipbox{\lipsum[1]}
+\clearpage
+\bibliographystyle{IEEEtran}
+\bibliography{bibliography}
+
+\end{document}

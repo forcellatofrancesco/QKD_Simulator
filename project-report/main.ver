@@ -1,0 +1,14 @@
+\begin {longtable}{@{}ll>{\hsize =\vhAuthorColWidth }X>{\hsize =\vhChangeColWidth }X@{}}
+\textbf {\vhversionname }
+ & \textbf {\vhdatename }
+ & \textbf {\vhauthorname }
+ & \textbf {\vhchangename }\\[1ex]
+0.1
+ & 6/4/2023
+ & \listset {LM}
+ & First Revision of the project Descriptions.\\
+0.2
+ & 14/4/2023
+ & \listset {LM}
+ & Fixes typos and adds an example bibliography item.\\
+\end {longtable}
