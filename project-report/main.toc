@@ -1,0 +1,7 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{4}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Your title page}{4}{section.1.1}%
+\contentsline {chapter}{\numberline {2}Group and Activity description}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Introduction to the Project}{5}{section.2.1}%
+\contentsline {chapter}{\numberline {3}The group work}{6}{chapter.3}%
+\contentsline {chapter}{\numberline {4}Conclusions}{7}{chapter.4}%
