@@ -1,0 +1,2 @@
+Sim. Command,cc0,cc1,cc2,cc3,cc4,cc5,cc6,cc7,cc8
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,477,810,1051,1227,1264,1241,1060,825,440

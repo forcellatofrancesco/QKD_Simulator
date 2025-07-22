@@ -1,0 +1,19 @@
+Sim. Command,qchannel,dist,ber
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel0_0to1,1000,0.0
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel0_1to0,1000,0.0
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel1_1to2,1000,0.0
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel1_2to1,1000,0.0
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel2_2to3,1000,0.0
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel2_3to2,1000,0.0
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel3_3to4,1000,1.994943e-318
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel3_4to3,1000,1.1512555e-317
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel4_4to5,1000,0.0
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel4_5to4,1000,0.0
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel5_5to6,1000,0.0
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel5_6to5,1000,9.542198685322753e-166
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel6_6to7,1000,0.0
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel6_7to6,1000,0.0
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel7_7to8,1000,0.0
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel7_8to7,1000,0.0
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel8_8to9,1000,0.0
+project/sim_ext.py --sim-time 1 --seq-graph project/file/chain_10_node_seq_1000.json --key-size 128 --mess-rate 0.04 --traffic project/file/traffic_chain_10.json,qchannel8_9to8,1000,0.0
