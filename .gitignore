@@ -4,3 +4,4 @@ project/simulations/**/
 project/file/**/
 .venv
 *.svg
+.vscode/
