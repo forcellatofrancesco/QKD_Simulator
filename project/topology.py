@@ -20,6 +20,59 @@ from typing import Any, Callable
 
 
 class QKDTopoExt(Topology):
+    """
+    QKDTopoExt is an extension of the Topology class designed for simulating Quantum Key Distribution (QKD) networks.
+    It provides methods for loading network configurations, generating QKD super nodes and transceivers, adding quantum
+    and classical channels, generating routing tables, managing key managers, and starting QKD and messaging protocols.
+
+    Attributes:
+        QKD_NODE (str): Identifier for QKD nodes.
+        P_FIDELITY (str): Key for polarization fidelity parameter.
+        B_RATE (str): Key for bit rate parameter.
+        P_DIM (int): Bit dimension for packets.
+        sim_path (str): Path for simulation output files.
+        sim_command (str): Command used for simulation runs.
+        super_qkd_nodes (dict): Dictionary of super QKD nodes in the topology.
+        timeline: Simulation timeline object.
+        _algorithm (Callable): Routing algorithm used for path computation.
+
+    Methods:
+        __init__(conf_file_name, tl, algorithm=shortest_path):
+            Initializes the QKDTopoExt topology with configuration file, timeline, and routing algorithm.
+
+        _load(filename):
+            Loads the topology configuration from a JSON file and initializes nodes, transceivers, channels, and routing tables.
+
+        generate_super_nodes(topo_config):
+            Creates super QKD nodes from the topology configuration.
+
+        generate_transceivers(topo_config):
+            Generates transceiver nodes and their associated protocols for each super node.
+
+        add_channels(topo_config):
+            Adds classical and quantum channels between transceivers based on the topology configuration.
+            Also computes and logs Bit Error Rate (BER) for quantum channels.
+
+        generate_routing_tables(algorithm):
+            Generates routing tables for all nodes using the specified routing algorithm.
+
+        add_key_managers(key_size, num_keys):
+            Adds key managers to each transceiver for key management and distribution.
+
+        start_pairing():
+            Pairs BB84 and Cascade protocols between transceivers to establish QKD links.
+
+        start_qkd():
+            Starts the QKD process for all eligible transceivers.
+
+        start_messaging(tl, mess_rate, buff_capacity, traffic):
+            Initiates messaging between nodes, either randomly or based on a specified traffic pattern.
+
+    Note:
+        This class assumes the existence of several external classes and functions such as Topology, SuperQKDNode,
+        QKDNode, MessagingProtocol, Transceiver, ClassicalChannel, QuantumChannel, FSOQKD, KeyManager,
+        pair_bb84_protocols, pair_cascade_protocols, and shortest_path.
+    """
 
     QKD_NODE = "QKDNode"
     P_FIDELITY = "polarization_fidelity"
@@ -33,7 +86,7 @@ class QKDTopoExt(Topology):
         self,
         conf_file_name: str,
         tl,
-        algorithm: Callable[[Graph, Any, Any, Any], list | dict] = shortest_path,
+        algorithm: Callable[[Graph, Any, Any], list | dict] = shortest_path,
     ):
         self.super_qkd_nodes = {}
         self.timeline = tl
@@ -165,7 +218,7 @@ class QKDTopoExt(Topology):
 
     def generate_routing_tables(
         self,
-        algorithm: Callable[[Graph, Any, Any, Any], list | dict],
+        algorithm: Callable[[Graph, Any, Any], list | dict],
     ):
         graph = DiGraph()
         edges = []
@@ -189,13 +242,12 @@ class QKDTopoExt(Topology):
                     continue
                 try:
                     # path = shortest_path(graph, source=src, target=dst, weight="weight")
-
-                    path = algorithm(graph, src, dst, "weight")
-
-                    # TO BE REMOVED #########################################################################################
-                    print("We are cooking bruh")
-                    exit(1)
-                    # TO BE REMOVED #########################################################################################
+                    # TODO REMOVE #########################################################################################
+                    print("before")
+                    path = algorithm(graph, src, dst)
+                    print("after")
+                    exit()
+                    # TODO REMOVE #########################################################################################
                     self.super_qkd_nodes[src].routing_table[dst] = path
 
                 except exception.NetworkXNoPath:
