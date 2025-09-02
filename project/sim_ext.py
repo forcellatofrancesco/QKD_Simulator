@@ -280,7 +280,10 @@ def main():
     traffic_json = "traffic.json"
     sim_params_json = "sim_parmas.json"
 
-    parser = argparse.ArgumentParser(description="parser")
+    parser = argparse.ArgumentParser(
+        description="parser",
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
 
     parser.add_argument(
         "--sim-time",
@@ -338,15 +341,14 @@ def main():
         dest="algorithm",
         type=str,
         default="shortest",
-        help="""
-- shortest: uses the shortest path possible\n
-- centflow: avoid the most central nodes
-""",
+        help="""- shortest: uses the shortest path possible
+- centflow: avoid the most central nodes""",
     )
 
     args = parser.parse_args()
 
     def shortest_helper(G: Graph, source, target) -> list | dict:
+        # helper function because of the different signatures between the two functions
         return shortest_path(G, source, target, "weight")
 
     algorithm = shortest_helper
@@ -386,7 +388,7 @@ def main():
             args.buff_capacity,
             args.inspection_rate,
             args.traffic,
-            algorithm=algorithm,
+            algorithm,
         )
 
     # Se specificati entrambi i due grafi prendimao quello di sequence
@@ -405,7 +407,7 @@ def main():
             args.buff_capacity,
             args.inspection_rate,
             args.traffic,
-            algorithm=algorithm,
+            algorithm,
         )
 
     # Se sepcificato solo quello networkX
@@ -425,7 +427,7 @@ def main():
             args.buff_capacity,
             args.inspection_rate,
             args.traffic,
-            algorithm=algorithm,
+            algorithm,
         )
 
     save_metrics()
