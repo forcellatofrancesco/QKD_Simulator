@@ -268,17 +268,6 @@ def sim(
 def main():
     global current_sim
     global sim_command
-    current_sim = (
-        "project/simulations/sim_"
-        + str(datetime.now().strftime("%Y-%m-%d_%H:%M:%S"))
-        + "/"
-    )
-    MessagingProtocol.sim_path = current_sim  # type: ignore
-    QKDTopoExt.sim_path = current_sim  # type: ignore
-    graph_json_ntx = "graph_networkx.json"
-    graph_json_seq = "graph_sequence.json"
-    traffic_json = "traffic.json"
-    sim_params_json = "sim_parmas.json"
 
     parser = argparse.ArgumentParser(
         description="parser",
@@ -346,6 +335,16 @@ def main():
     )
 
     args = parser.parse_args()
+
+    current_sim = f"project/simulations/sim_{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}_{args.algorithm}/"
+
+    MessagingProtocol.sim_path = current_sim  # type: ignore
+    QKDTopoExt.sim_path = current_sim  # type: ignore
+    graph_json_ntx = "graph_networkx.json"
+    graph_json_seq = "graph_sequence.json"
+    traffic_json = "traffic.json"
+    sim_params_json = "sim_parmas.json"
+
 
     def shortest_helper(G: Graph, source, target) -> list | dict:
         # helper function because of the different signatures between the two functions
