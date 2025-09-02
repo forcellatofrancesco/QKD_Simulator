@@ -241,13 +241,7 @@ class QKDTopoExt(Topology):
                 if src == dst:
                     continue
                 try:
-                    # path = shortest_path(graph, source=src, target=dst, weight="weight")
-                    # TODO REMOVE #########################################################################################
-                    print("before")
                     path = algorithm(graph, src, dst)
-                    print("after")
-                    exit()
-                    # TODO REMOVE #########################################################################################
                     self.super_qkd_nodes[src].routing_table[dst] = path
 
                 except exception.NetworkXNoPath:

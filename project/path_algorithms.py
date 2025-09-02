@@ -70,6 +70,22 @@ def effective_degree(G, node):
 
 
 def ensure_graph_attributes(G, node_capacity: int, link_capacity: int):
+    """
+    Ensures that all nodes and edges in the given graph have 'capacity' and 'usage' attributes.
+
+    For each node in the graph `G`, if the 'capacity' or 'usage' attribute is missing, it sets:
+        - 'capacity' to the provided `node_capacity`
+        - 'usage' to 0
+
+    For each edge in the graph `G`, if the 'capacity' or 'usage' attribute is missing, it sets:
+        - 'capacity' to the provided `link_capacity`
+        - 'usage' to 0
+
+    Parameters:
+        G (networkx.Graph): The graph whose nodes and edges will be checked and updated.
+        node_capacity (int): The default capacity value to assign to nodes missing the 'capacity' attribute.
+        link_capacity (int): The default capacity value to assign to edges missing the 'capacity' attribute.
+    """
     # Only set node attributes if any node is missing them
     if any("capacity" not in G.nodes[n] or "usage" not in G.nodes[n] for n in G.nodes):
         for n in G.nodes:
