@@ -1,7 +1,7 @@
 from typing import Any, Callable
 from networkx import Graph, shortest_path
 from sequence.kernel.timeline import Timeline
-from path_algorithms import centflow_shortest_path
+from path_algorithms import centflow_shortest_path, weighted_shortest_path
 from topology import QKDTopoExt
 from messaging import MessagingProtocol
 import networkx as nx
@@ -356,6 +356,8 @@ def main():
             algorithm = shortest_helper
         case "centflow":
             algorithm = centflow_shortest_path
+        case "betweenness":
+            algorithm = weighted_shortest_path
 
     print(f"[Simulation Command] {' '.join(sys.argv[0:])}")
 

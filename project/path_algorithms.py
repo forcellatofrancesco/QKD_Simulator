@@ -1,6 +1,6 @@
 import heapq
 import networkx as nx
-from networkx import Graph
+from networkx import Graph, DiGraph
 
 NODE_CAPACITY = 100  # node capacity (same for all nodes)
 LINK_CAPACITY = 100  # link capacity (same for all links)
@@ -159,3 +159,35 @@ def centflow_shortest_path(G: Graph, source, target) -> list | dict:
 
             heapq.heappush(queue, (cost + weight, neighbor, path))
     return []  # No path found
+
+
+def weighted_shortest_path(G: DiGraph, source, target) -> list | dict:
+    """
+    Finds the shortest path between a source and target node in a graph using a node centrality betweenness as a weight.
+
+    Args:
+        G (DiGraph): A NetworkX graph object.
+        source: The starting node for the path.
+        target: The destination node for the path.
+
+    Returns:
+        list: A list of nodes representing the shortest path from source to target.
+              Returns an empty list if no path is found.
+
+    Notes:
+        - The path cost is computed as a node centrality betweenness which should encourage to avoid possibly heavily used nodes.
+        - The cost of an edge (u, v) is a betweenness value of a node u.
+    """
+
+
+    # already normalized betweennest
+    betweennes = nx.betweenness_centrality(G, normalized=True)
+
+    for edge in G.edges():
+        u, v = edge
+
+        G[u][v]['weight'] = betweennes[v]
+
+    path = nx.dijkstra_path(G, source, target, 'weight')
+
+    return path
