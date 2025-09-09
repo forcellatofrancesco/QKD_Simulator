@@ -1,6 +1,6 @@
 import heapq
 import networkx as nx
-from networkx import Graph, DiGraph
+from networkx import Graph
 
 NODE_CAPACITY = 100  # node capacity (same for all nodes)
 LINK_CAPACITY = 100  # link capacity (same for all links)
@@ -8,6 +8,7 @@ THRESHOLD_NODE = 0.7  # node utilization optional threshold (70%)
 THRESHOLD_LINK = 0.5  # node utilization optional threshold (50%)
 
 
+# SHOULD BE USELESS
 def edge_utilization(G, u, v):
     """
     Calculate the utilization of an edge in a graph.
@@ -27,6 +28,7 @@ def edge_utilization(G, u, v):
     return G[u][v]["usage"] / G[u][v]["capacity"]
 
 
+# SHOULD BE USELESS
 def node_utilization(G, n):
     """
     Calculate the utilization of a node in a graph.
@@ -45,6 +47,7 @@ def node_utilization(G, n):
     return G.nodes[n]["usage"] / G.nodes[n]["capacity"]
 
 
+# SHOULD BE USELESS
 def effective_degree(G, node):
     """
     Calculates the effective degree of a node in the graph based on utilization thresholds.
@@ -69,6 +72,7 @@ def effective_degree(G, node):
     )
 
 
+# SHOULD BE USELESS
 def ensure_graph_attributes(G, node_capacity: int, link_capacity: int):
     """
     Ensures that all nodes and edges in the given graph have 'capacity' and 'usage' attributes.
@@ -123,6 +127,7 @@ def centflow_shortest_path(G: Graph, source, target) -> list | dict:
           `edge_utilization`, `node_utilization`, and `effective_degree`.
         - The algorithm uses a priority queue (min-heap) to explore paths with the lowest cumulative cost.
     """
+    
     queue = []
     node_centrality = nx.betweenness_centrality(G)
     edge_centrality = nx.edge_betweenness_centrality(G)
@@ -161,9 +166,10 @@ def centflow_shortest_path(G: Graph, source, target) -> list | dict:
     return []  # No path found
 
 
-def weighted_shortest_path(G: DiGraph, source, target) -> list | dict:
+
+def weighted_shortest_path(G: Graph, source, target) -> list | dict:
     """
-    Finds the shortest path between a source and target node in a graph using a node centrality betweenness as a weight.
+    Finds the shortest path between a source and target node in a graph using edge centrality betweenness as a weight.
 
     Args:
         G (DiGraph): A NetworkX graph object.
@@ -175,70 +181,16 @@ def weighted_shortest_path(G: DiGraph, source, target) -> list | dict:
               Returns an empty list if no path is found.
 
     Notes:
-        - The path cost is computed as a node centrality betweenness which should encourage to avoid possibly heavily used nodes.
-        - The cost of an edge (u, v) is a betweenness value of a node u.
+        - The path cost is computed as edge centrality betweenness which should encourage to avoid possibly heavily used nodes.
+        - The cost of an edge (u, v) is the centrality value of that edge.
     """
 
-    # Consider to use the edge centrality
-    # edge_centrality = nx.edge_betweenness_centrality(G)
-    # or change the function to use both
-    # check 
+    edge_betweenness = nx.edge_betweenness_centrality(G)
 
-    # already normalized betweennest
-    betweennes = nx.betweenness_centrality(G, normalized=True)
-
-
-    for edge in G.edges():
-        u, v = edge
-
-        G[u][v]['weight'] = betweennes[v]
+    for u, v in G.edges():
+            weight = edge_betweenness[(u, v)] + 1    # +1 to avoid 0 as centrality value
+            G[u][v]['weight'] = weight
 
     path = nx.dijkstra_path(G, source, target, 'weight')
-
     return path
 
-
-'''
-    I would suggest to implement the function in this way so that we can choose and test between the centrality computed on nodes or on edges. 
-    To TEST if it works.
-    Or maybe to create also the edge version.
-'''
-
-'''
-def weighted_shortest_path(G: Graph, source, target, node_centr: bool) -> list | dict:
-    """
-    Finds the shortest path between a source and target node in a graph using node/edge centrality betweenness as a weight.
-
-    Args:
-        G (DiGraph): A NetworkX graph object.
-        source: The starting node for the path.
-        target: The destination node for the path.
-        node_centr: boolean parameter to decide which centrality values to use. If True, it uses the node centrality, if False it uses the edge 
-            centrality.
-
-    Returns:
-        list: A list of nodes representing the shortest path from source to target.
-              Returns an empty list if no path is found.
-
-    Notes:
-        - The path cost is computed as a node centrality betweenness which should encourage to avoid possibly heavily used nodes.
-        - The cost of an edge (u, v) is a betweenness value of a node u.
-    """
-
-    if node_centr:
-        node_centrality = nx.betweenness_centrality(G)
-
-        for u, v in G.edges():
-            # weight = average centrality of the two nodes + 1 to avoid 0 values
-            weight = (node_centrality[u] + node_centrality[v]) / 2 + 1
-            G[u][v]['weight'] = weight
-    else:
-        edge_centrality = nx.edge_betweenness_centrality(G)
-
-        for u, v in G.edges():
-            weight = edge_centrality[(u, v)] + 1    # +1 to avoid 0 as centrality value
-            G[u][v]['weight'] = weight
-
-    path = nx.shortest_path(G, source, target)
-    return path
-'''
