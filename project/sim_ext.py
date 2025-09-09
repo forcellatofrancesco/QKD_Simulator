@@ -232,6 +232,7 @@ def sim(
     inspection_rate,
     traffic,
     algorithm: Callable[[Graph, Any, Any], list | dict],
+    routing: bool = False
 ):
     global tick
     global network
@@ -242,6 +243,7 @@ def sim(
         graph_json_seq,
         timeline,
         algorithm,
+        routing
     )
     gen_csv_file()
 
@@ -334,6 +336,13 @@ def main():
 - centflow: avoid the most central nodes""",
     )
 
+    parser.add_argument(
+        "--routing",
+        dest="routing",
+        action="store_true",
+        help="If enabled, packets are routed via full route instead of next hop"
+    )
+
     args = parser.parse_args()
 
     current_sim = f"project/simulations/sim_{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}_{args.algorithm}/"
@@ -390,6 +399,7 @@ def main():
             args.inspection_rate,
             args.traffic,
             algorithm,
+            args.routing
         )
 
     # Se specificati entrambi i due grafi prendimao quello di sequence
@@ -409,6 +419,7 @@ def main():
             args.inspection_rate,
             args.traffic,
             algorithm,
+            args.routing
         )
 
     # Se sepcificato solo quello networkX
@@ -429,6 +440,7 @@ def main():
             args.inspection_rate,
             args.traffic,
             algorithm,
+            args.routing
         )
 
     save_metrics()

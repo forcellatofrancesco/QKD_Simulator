@@ -87,10 +87,12 @@ class QKDTopoExt(Topology):
         conf_file_name: str,
         tl,
         algorithm: Callable[[Graph, Any, Any], list | dict] = shortest_path,
+        routing: bool = False
     ):
         self.super_qkd_nodes = {}
         self.timeline = tl
         self._algorithm = algorithm
+        self.routing = routing
         super().__init__(conf_file_name)
 
     def _load(self, filename):
@@ -105,7 +107,7 @@ class QKDTopoExt(Topology):
         for node in topo_config[Topology.ALL_NODE]:
             node_name = node[Topology.NAME]
 
-            super_node = SuperQKDNode(node_name)
+            super_node = SuperQKDNode(node_name, self.routing)
             self.super_qkd_nodes[node_name] = super_node
 
     def generate_transceivers(self, topo_config):
@@ -327,6 +329,7 @@ class QKDTopoExt(Topology):
                 tr.qkd_node_p.buffer_capacity = buff_capacity
 
         print("[Messaging] Start Messaging")
+        print("Routing: ", self.routing)
 
         if traffic == None:
             for super_node in self.super_qkd_nodes.values():
@@ -334,11 +337,17 @@ class QKDTopoExt(Topology):
                 text = "ciao"
                 text = bytes(text, "utf-8")  # b'ciao'
                 text = list(text)
+
+                # packet also contains the route
+                route = super_node.routing_table[dest[super_node.name]][1:]
+                # print('SRC: ', super_node.name, 'ROUTE: ',route)
+
                 message = {
                     "src": super_node.name,
                     "dest": dest[super_node.name],
                     "payload": text,
                     "hop": 0,
+                    "route": route,
                     "time": None,
                 }
                 message = json.dumps(message)
@@ -349,11 +358,18 @@ class QKDTopoExt(Topology):
                     text = "ciao"
                     text = bytes(text, "utf-8")  # b'ciao'
                     text = list(text)
+
+                    # packet also contains the route
+                    route =  self.super_qkd_nodes[super_node].routing_table[p][1:]
+                    # print('SRC: ', super_node ,'ROUTE: ', route)
+
+
                     message = {
                         "src": super_node,
                         "dest": p,
                         "payload": text,
                         "hop": 0,
+                        "route": route,
                         "time": None,
                     }
                     message = json.dumps(message)
