@@ -9,6 +9,8 @@ import json
 class Transceiver:
 
     def __init__(self, qkd_node, qkd_node_p):
+        # qkd_node is a QKDNode object
+        # qkd_node_p is a MessagingProtocol object. Inside it there is the buffer, so this has to be accessed to deal with the utilization.
         self.qkd_node = qkd_node
         self.qkd_node_p = qkd_node_p
         self.qkd_node_km = None

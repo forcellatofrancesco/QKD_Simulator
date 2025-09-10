@@ -43,6 +43,7 @@ class MessagingProtocol(Protocol):
         self.drop_mess = 0
         self.mess_ric = 0
 
+        # This should be the buffer the professor was talking about. It should be used to compute the utilization of a specific link
         #Buffer
         self.buffer = collections.deque()
         self.buffer_capacity = None
@@ -50,6 +51,9 @@ class MessagingProtocol(Protocol):
     def init(self):
         pass
 
+    # This appears to be the function that actually sends the message (among the several ones)
+    # So maybe the utilization update should be done here
+    # This should mean that the easiest place to put the global graph reference, as a class field
     def send(self, tl):
         if len(self.buffer) > 0 and len(self.key_manager.keys) > 0 and self.token: #and len(self.other.qkd_node_p.key_manager.keys):
             key = self.key_manager.consume()
@@ -72,7 +76,7 @@ class MessagingProtocol(Protocol):
             new_msg.protocol_type = type(self)
             
             #send_message QKDNode
-            self.own.send_message(self.other_node, new_msg)
+            self.own.send_message(self.other_node, new_msg)         # send_message di QKDNode
 
             self.token = False
             self.other.qkd_node_p.token = False

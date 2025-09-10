@@ -2,13 +2,13 @@ import heapq
 import networkx as nx
 from networkx import Graph
 
-NODE_CAPACITY = 100  # node capacity (same for all nodes)
-LINK_CAPACITY = 100  # link capacity (same for all links)
-THRESHOLD_NODE = 0.7  # node utilization optional threshold (70%)
-THRESHOLD_LINK = 0.5  # node utilization optional threshold (50%)
+# useless, we are dealing only with edge utilization
+# THRESHOLD_NODE = 0.7  # node utilization optional threshold
 
 
-# SHOULD BE USELESS
+THRESHOLD_LINK = 0.7  # link utilization optional threshold
+
+
 def edge_utilization(G, u, v):
     """
     Calculate the utilization of an edge in a graph.
@@ -28,9 +28,8 @@ def edge_utilization(G, u, v):
     return G[u][v]["usage"] / G[u][v]["capacity"]
 
 
-# SHOULD BE USELESS
+""" # SHOULD BE USELESS
 def node_utilization(G, n):
-    """
     Calculate the utilization of a node in a graph.
 
     Parameters:
@@ -43,11 +42,10 @@ def node_utilization(G, n):
     Raises:
         KeyError: If the node does not have 'usage' or 'capacity' attributes.
         ZeroDivisionError: If the node's capacity is zero.
-    """
-    return G.nodes[n]["usage"] / G.nodes[n]["capacity"]
+
+    return G.nodes[n]["usage"] / G.nodes[n]["capacity"] """
 
 
-# SHOULD BE USELESS
 def effective_degree(G, node):
     """
     Calculates the effective degree of a node in the graph based on utilization thresholds.
@@ -64,17 +62,19 @@ def effective_degree(G, node):
         - THRESHOLD_LINK (float): Utilization threshold for edges.
     """
 
-    if node_utilization(G, node) >= THRESHOLD_NODE:
-        return 0
+    # we don't use node utilization
+    # if node_utilization(G, node) >= THRESHOLD_NODE:
+    #     return 0
+
     neighbors = list(G.neighbors(node))
     return sum(
         1 for nbr in neighbors if edge_utilization(G, node, nbr) < THRESHOLD_LINK
     )
 
 
-# SHOULD BE USELESS
+""" SHOULD BE USELESS
 def ensure_graph_attributes(G, node_capacity: int, link_capacity: int):
-    """
+    """"""
     Ensures that all nodes and edges in the given graph have 'capacity' and 'usage' attributes.
 
     For each node in the graph `G`, if the 'capacity' or 'usage' attribute is missing, it sets:
@@ -89,7 +89,7 @@ def ensure_graph_attributes(G, node_capacity: int, link_capacity: int):
         G (networkx.Graph): The graph whose nodes and edges will be checked and updated.
         node_capacity (int): The default capacity value to assign to nodes missing the 'capacity' attribute.
         link_capacity (int): The default capacity value to assign to edges missing the 'capacity' attribute.
-    """
+    """"""
     # Only set node attributes if any node is missing them
     if any("capacity" not in G.nodes[n] or "usage" not in G.nodes[n] for n in G.nodes):
         for n in G.nodes:
@@ -103,7 +103,7 @@ def ensure_graph_attributes(G, node_capacity: int, link_capacity: int):
             if "capacity" not in G[u][v]:
                 G[u][v]["capacity"] = link_capacity
             if "usage" not in G[u][v]:
-                G[u][v]["usage"] = 0
+                G[u][v]["usage"] = 0 """
 
 
 def centflow_shortest_path(G: Graph, source, target) -> list | dict:
@@ -131,7 +131,9 @@ def centflow_shortest_path(G: Graph, source, target) -> list | dict:
     queue = []
     node_centrality = nx.betweenness_centrality(G)
     edge_centrality = nx.edge_betweenness_centrality(G)
-    ensure_graph_attributes(G, NODE_CAPACITY, LINK_CAPACITY)
+
+    # It shouldn't be necessary since the Graph used is a GlobalGraph which surely has these attributes.
+    # ensure_graph_attributes(G, NODE_CAPACITY, LINK_CAPACITY)
     heapq.heappush(queue, (0, source, []))
     visited = set()
 
@@ -151,14 +153,16 @@ def centflow_shortest_path(G: Graph, source, target) -> list | dict:
 
             # weight computation
             e_util = edge_utilization(G, node, neighbor)
-            n_util = node_utilization(G, neighbor)
+            # useless since we use only edge utilization
+            # n_util = node_utilization(G, neighbor)
 
             cnb = node_centrality[neighbor]
             ceb = edge_centrality.get(
                 (node, neighbor), edge_centrality.get((neighbor, node), 0)
             )
             deg_eff = effective_degree(G, neighbor)
-            node_weight = n_util * cnb * deg_eff
+            # node_weight = n_util * cnb * deg_eff
+            node_weight = cnb * deg_eff
             edge_weight = e_util * ceb
             weight = node_weight + edge_weight + 1e-6
 

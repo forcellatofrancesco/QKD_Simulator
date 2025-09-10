@@ -2,6 +2,8 @@ import json
 
 class SuperQKDNode:
 
+    # To add the global graph reference to update the global graph, I don't actually know for sure if it has to be done
+    # here or inside the Transceiver or MessagingProtocol class
     def __init__(self, name, routing: bool = False):
         self.name = name
         self.transceivers = {}
