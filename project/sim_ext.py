@@ -1,7 +1,11 @@
 from typing import Any, Callable
 from networkx import Graph, shortest_path
 from sequence.kernel.timeline import Timeline
-from path_algorithms import centflow_shortest_path, weighted_shortest_path, gready_approach
+from path_algorithms import (
+    centflow_shortest_path,
+    weighted_shortest_path,
+    gready_approach,
+)
 from topology import QKDTopoExt
 from messaging import MessagingProtocol
 import networkx as nx
@@ -232,19 +236,14 @@ def sim(
     inspection_rate,
     traffic,
     algorithm: Callable[[Graph, Any, Any], list | dict],
-    routing: bool = False
+    routing: bool = False,
 ):
     global tick
     global network
     global timeline
     timeline = Timeline(sim_time * 1.0e12)
 
-    network = QKDTopoExt(
-        graph_json_seq,
-        timeline,
-        algorithm,
-        routing
-    )
+    network = QKDTopoExt(graph_json_seq, timeline, algorithm, routing)
     gen_csv_file()
 
     network.add_key_managers(key_size, math.inf)
@@ -341,12 +340,12 @@ def main():
         "--routing",
         dest="routing",
         action="store_true",
-        help="If enabled, packets are routed via full route instead of next hop"
+        help="If enabled, packets are routed via full route instead of next hop",
     )
 
     args = parser.parse_args()
 
-    current_sim = f"project/simulations/sim_{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}_{args.algorithm}/"
+    current_sim = f"project/simulations/sim_{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}_{args.algorithm}_{args.sim_time}/"
 
     MessagingProtocol.sim_path = current_sim  # type: ignore
     QKDTopoExt.sim_path = current_sim  # type: ignore
@@ -354,7 +353,6 @@ def main():
     graph_json_seq = "graph_sequence.json"
     traffic_json = "traffic.json"
     sim_params_json = "sim_parmas.json"
-
 
     def shortest_helper(G: Graph, source, target) -> list | dict:
         # helper function because of the different signatures between the two functions
@@ -402,7 +400,7 @@ def main():
             args.inspection_rate,
             args.traffic,
             algorithm,
-            args.routing
+            args.routing,
         )
 
     # Se specificati entrambi i due grafi prendimao quello di sequence
@@ -422,7 +420,7 @@ def main():
             args.inspection_rate,
             args.traffic,
             algorithm,
-            args.routing
+            args.routing,
         )
 
     # Se sepcificato solo quello networkX
@@ -443,7 +441,7 @@ def main():
             args.inspection_rate,
             args.traffic,
             algorithm,
-            args.routing
+            args.routing,
         )
 
     save_metrics()
