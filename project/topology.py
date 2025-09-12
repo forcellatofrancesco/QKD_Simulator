@@ -12,6 +12,8 @@ from messaging import MessagingProtocol
 from key_manager import KeyManager
 from qber import FSOQKD
 
+from path_algorithms import gready_approach
+
 import re
 import json
 import random
@@ -238,16 +240,24 @@ class QKDTopoExt(Topology):
 
         graph.add_edges_from(edges)
 
-        for src in graph.nodes:
-            for dst in graph.nodes:
-                if src == dst:
-                    continue
-                try:
-                    path = algorithm(graph, src, dst)
-                    self.super_qkd_nodes[src].routing_table[dst] = path
+        if algorithm is gready_approach:
+            gready_paths=algorithm(graph,1,1) # 1,1 for compatibility reson but are useless
+            for src,x_src in gready_paths.items():
+                for dst,path in x_src.items():
+                     self.super_qkd_nodes[src].routing_table[dst] = path
 
-                except exception.NetworkXNoPath:
-                    pass
+
+        else:
+            for src in graph.nodes:
+                for dst in graph.nodes:
+                    if src == dst:
+                        continue
+                    try:
+                        path = algorithm(graph, src, dst)
+                        self.super_qkd_nodes[src].routing_table[dst] = path
+
+                    except exception.NetworkXNoPath:
+                        pass
 
     def add_key_managers(self, key_size, num_keys):
         for super_node in self.super_qkd_nodes.values():
