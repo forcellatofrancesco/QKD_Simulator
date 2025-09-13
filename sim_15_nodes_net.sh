@@ -5,14 +5,9 @@
 # python3 project/sim_ext.py --sim-time 1.5 --seq-graph project/file/graph_15_nodes.json --traffic project/file/traffic_15_nodes_net.json --inspection-rate 0.001 --mess-rate 0.002
 
 python3 project/sim_ext.py --sim-time 7.5 --seq-graph project/file/graph_15_nodes.json --traffic project/file/traffic_15_nodes_net.json --inspection-rate 0.001 --mess-rate 0.01 --algorithm betweenness &
-sleep 1 # ensure to create a new folder for the simulation
 python3 project/sim_ext.py --sim-time 1.5 --seq-graph project/file/graph_15_nodes.json --traffic project/file/traffic_15_nodes_net.json --inspection-rate 0.001 --mess-rate 0.002 --algorithm betweenness &
-sleep 1 # ensure to create a new folder for the simulation
 python3 project/sim_ext.py --sim-time 7.5 --seq-graph project/file/graph_15_nodes.json --traffic project/file/traffic_15_nodes_net.json --inspection-rate 0.001 --mess-rate 0.01 --algorithm shortest &
-sleep 1 # ensure to create a new folder for the simulation
 python3 project/sim_ext.py --sim-time 1.5 --seq-graph project/file/graph_15_nodes.json --traffic project/file/traffic_15_nodes_net.json --inspection-rate 0.001 --mess-rate 0.002 --algorithm shortest &
-sleep 1 # ensure to create a new folder for the simulation
 python3 project/sim_ext.py --sim-time 7.5 --seq-graph project/file/graph_15_nodes.json --traffic project/file/traffic_15_nodes_net.json --inspection-rate 0.001 --mess-rate 0.01 --algorithm greedy &
-sleep 1 # ensure to create a new folder for the simulation
 python3 project/sim_ext.py --sim-time 1.5 --seq-graph project/file/graph_15_nodes.json --traffic project/file/traffic_15_nodes_net.json --inspection-rate 0.001 --mess-rate 0.002 --algorithm greedy &
 wait
