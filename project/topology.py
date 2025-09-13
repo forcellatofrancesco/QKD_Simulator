@@ -88,8 +88,11 @@ class QKDTopoExt(Topology):
         self,
         conf_file_name: str,
         tl,
-        algorithm: Callable[[Graph, Any, Any], list | dict] = shortest_path,
-        routing: bool = False
+        algorithm: (
+            Callable[[Graph, Any, Any], list | dict]
+            | Callable[[DiGraph, Any, Any], list | dict]
+        ) = shortest_path,
+        routing: bool = False,
     ):
         self.super_qkd_nodes = {}
         self.timeline = tl
@@ -222,7 +225,10 @@ class QKDTopoExt(Topology):
 
     def generate_routing_tables(
         self,
-        algorithm: Callable[[Graph, Any, Any], list | dict],
+        algorithm: (
+            Callable[[Graph, Any, Any], list | dict]
+            | Callable[[DiGraph, Any, Any], list | dict]
+        ),
     ):
         graph = DiGraph()
         edges = []
@@ -241,11 +247,12 @@ class QKDTopoExt(Topology):
         graph.add_edges_from(edges)
 
         if algorithm is gready_approach:
-            gready_paths=algorithm(graph,1,1) # 1,1 for compatibility reson but are useless
-            for src,x_src in gready_paths.items():
-                for dst,path in x_src.items():
-                     self.super_qkd_nodes[src].routing_table[dst] = path
-
+            gready_paths = algorithm(
+                graph, 1, 1
+            )  # 1,1 for compatibility reson but are useless
+            for src, x_src in gready_paths.items():  # type: ignore
+                for dst, path in x_src.items():
+                    self.super_qkd_nodes[src].routing_table[dst] = path
 
         else:
             for src in graph.nodes:
@@ -370,9 +377,8 @@ class QKDTopoExt(Topology):
                     text = list(text)
 
                     # packet also contains the route
-                    route =  self.super_qkd_nodes[super_node].routing_table[p][1:]
+                    route = self.super_qkd_nodes[super_node].routing_table[p][1:]
                     # print('SRC: ', super_node ,'ROUTE: ', route)
-
 
                     message = {
                         "src": super_node,

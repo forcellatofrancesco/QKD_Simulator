@@ -235,7 +235,10 @@ def sim(
     buff_capacity,
     inspection_rate,
     traffic,
-    algorithm: Callable[[Graph, Any, Any], list | dict],
+    algorithm: (
+        Callable[[Graph, Any, Any], list | dict]
+        | Callable[[nx.DiGraph, Any, Any], list | dict]
+    ),
     routing: bool = False,
 ):
     global tick
