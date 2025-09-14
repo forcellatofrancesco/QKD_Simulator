@@ -7,7 +7,7 @@ import numpy as np
 # THRESHOLD_NODE = 0.7  # node utilization optional threshold
 
 
-THRESHOLD_LINK = 0.7  # link utilization optional threshold
+THRESHOLD_LINK = 0.9  # link utilization optional threshold
 
 
 def edge_utilization(G, u, v):
@@ -199,51 +199,6 @@ def weighted_shortest_path(G: Graph, source, target) -> list | dict:
     path = nx.dijkstra_path(G, source, target, 'weight')
     return path
 
-
-'''
-    I would suggest to implement the function in this way so that we can choose and test between the centrality computed on nodes or on edges. 
-    To TEST if it works.
-    Or maybe to create also the edge version.
-'''
-
-'''
-def weighted_shortest_path(G: Graph, source, target, node_centr: bool) -> list | dict:
-    """
-    Finds the shortest path between a source and target node in a graph using node/edge centrality betweenness as a weight.
-
-    Args:
-        G (DiGraph): A NetworkX graph object.
-        source: The starting node for the path.
-        target: The destination node for the path.
-        node_centr: boolean parameter to decide which centrality values to use. If True, it uses the node centrality, if False it uses the edge 
-            centrality.
-
-    Returns:
-        list: A list of nodes representing the shortest path from source to target.
-              Returns an empty list if no path is found.
-
-    Notes:
-        - The path cost is computed as a node centrality betweenness which should encourage to avoid possibly heavily used nodes.
-        - The cost of an edge (u, v) is a betweenness value of a node u.
-    """
-
-    if node_centr:
-        node_centrality = nx.betweenness_centrality(G)
-
-        for u, v in G.edges():
-            # weight = average centrality of the two nodes + 1 to avoid 0 values
-            weight = (node_centrality[u] + node_centrality[v]) / 2 + 1
-            G[u][v]['weight'] = weight
-    else:
-        edge_centrality = nx.edge_betweenness_centrality(G)
-
-        for u, v in G.edges():
-            weight = edge_centrality[(u, v)] + 1    # +1 to avoid 0 as centrality value
-            G[u][v]['weight'] = weight
-
-    path = nx.shortest_path(G, source, target)
-    return path
-'''
 
 def gready_approach(G: DiGraph, xx, yy) -> list | dict:
     gready_paths={}

@@ -25,9 +25,19 @@ import psutil
 import csv
 import threading
 import re
+from global_graph import GlobalGraph
 
 tick = 0
 current_sim = ""
+
+
+def save_global_graph_snapshot(tl, GG: GlobalGraph):
+    rate = 0.01
+    target = tl.now() + (rate * 1.0e12)
+    while True:
+        if tl.now() > target:
+            GG.save_graph(tl=tl)
+            target = tl.now() + (rate * 1.0e12)
 
 
 def inspect(tl, rate):
@@ -228,6 +238,7 @@ def draw_to_file(graph, filepath):
 
 
 def sim(
+    current_sim,
     graph_json_seq,
     sim_time,
     key_size,
@@ -246,17 +257,26 @@ def sim(
     global timeline
     timeline = Timeline(sim_time * 1.0e12)
 
-    network = QKDTopoExt(graph_json_seq, timeline, algorithm, routing)
+    # Added this, to create the GlobalGraph object
+    GG = GlobalGraph("project/file/graph_networkx_15_nodes.json", current_sim)
+
+    network = QKDTopoExt(graph_json_seq, timeline, GG, algorithm, routing)
     gen_csv_file()
 
     network.add_key_managers(key_size, math.inf)
     network.start_pairing()
     tick = time.time()
     network.start_qkd()
+
+
     network.start_messaging(timeline, mess_rate, buff_capacity, traffic)
 
     threading.Thread(
         target=inspect, args=(timeline, inspection_rate), daemon=True
+    ).start()
+
+    threading.Thread(
+        target=save_global_graph_snapshot, args=(timeline, GG), daemon=True
     ).start()
 
     timeline.init()
@@ -395,6 +415,7 @@ def main():
         draw_to_file(graph, current_sim + "network_graph.png")
         netparse(current_sim + graph_json_ntx, current_sim + graph_json_seq)
         sim(
+            current_sim,
             current_sim + graph_json_seq,
             args.sim_time,
             args.key_size,
@@ -415,6 +436,7 @@ def main():
         with open(current_sim + graph_json_seq, "w") as f:
             json.dump(js_graph, f, ensure_ascii=False, indent=4)
         sim(
+            current_sim,
             current_sim + graph_json_seq,
             args.sim_time,
             args.key_size,
@@ -436,6 +458,7 @@ def main():
             json.dump(js_graph, f, ensure_ascii=False, indent=4)
         netparse(current_sim + graph_json_ntx, current_sim + graph_json_seq)
         sim(
+            current_sim,
             current_sim + graph_json_seq,
             args.sim_time,
             args.key_size,
