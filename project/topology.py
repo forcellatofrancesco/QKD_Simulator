@@ -226,23 +226,38 @@ class QKDTopoExt(Topology):
 
     def generate_graph(self) -> DiGraph:
         """
-        Generates a DiGraph with link capacities
+        Generates a DiGraph with link and node utilizations.
+        Utilization of link u,v is utilization of transceiver from node u to node v.
+        Utilization of node u is combined utilization of its all outgoing transceivers.
         """
+
         graph = DiGraph()
         edges = []
         for super_node in self.super_qkd_nodes.values():
-            graph.add_node(super_node.name)
 
+
+            node_buffer_capacity = 0
+            node_buffer_size = 0
             for tr in super_node.transceivers.values():
 
                 src_node = re.findall("tr_(.*)_to_(.*)", tr.qkd_node.name)[0][0]
                 dst_node = re.findall("tr_(.*)_to_(.*)", tr.qkd_node.name)[0][1]
 
                 dist = 1
-                util = len(tr.qkd_node_p.buffer)/tr.qkd_node_p.buffer_capacity
+                tr_buffer_capacity = tr.qkd_node_p.buffer_capacity
+                tr_buffer_size = len(tr.qkd_node_p.buffer)
+
+                node_buffer_capacity += tr_buffer_capacity
+                node_buffer_size += tr_buffer_size
+
+                util = tr_buffer_size/tr_buffer_capacity
                 edges.append(
                     (src_node, dst_node, {"util": util, 'dist': dist})
                 )
+
+
+            n_util = node_buffer_size/node_buffer_capacity
+            graph.add_node(super_node.name, n_util=n_util)
 
         graph.add_edges_from(edges)
         return graph
