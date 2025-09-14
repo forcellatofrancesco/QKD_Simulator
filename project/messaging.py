@@ -12,6 +12,7 @@ from sequence.qkd.cascade import pair_cascade_protocols
 from sequence.kernel.process import Process
 from sequence.kernel.event import Event
 from global_graph import GlobalGraph
+from global_graph import GlobalGraph
 
 from onetimepad import OneTimePad
 from pympler import asizeof
@@ -37,10 +38,13 @@ class MessagingProtocol(Protocol):
     ):
         super().__init__(own, name)
         self.own = own                  # QKDNode type
+        self.own = own                  # QKDNode type
         own.protocols.append(self)
         self.other_name = other_name
         self.other_node = other_node    # Name to use for the link identification
+        self.other_node = other_node    # Name to use for the link identification
         self.other = None
+        self.super_qkd = superQKD       # SuperQKDNode of reference
         self.super_qkd = superQKD       # SuperQKDNode of reference
         self.key_manager = None
         self.token = True

@@ -12,6 +12,7 @@ from messaging import MessagingProtocol
 from key_manager import KeyManager
 from qber import FSOQKD
 from global_graph import GlobalGraph
+from global_graph import GlobalGraph
 
 from path_algorithms import gready_approach
 
@@ -100,6 +101,7 @@ class QKDTopoExt(Topology):
         self._algorithm = algorithm
         self.routing = routing
         self.gg = GG
+        self.gg = GG
         super().__init__(conf_file_name)
 
     def _load(self, filename):
@@ -109,6 +111,7 @@ class QKDTopoExt(Topology):
         self.generate_transceivers(topo_config)
         self.add_channels(topo_config)
         # self.generate_routing_tables(self._algorithm)
+        # self.generate_routing_tables(self._algorithm)
 
     def generate_super_nodes(self, topo_config):
         for node in topo_config[Topology.ALL_NODE]:
@@ -117,6 +120,7 @@ class QKDTopoExt(Topology):
             super_node = SuperQKDNode(node_name, self.routing, self)
             self.super_qkd_nodes[node_name] = super_node
 
+    # Edited to include the GlobalGraph reference
     # Edited to include the GlobalGraph reference
     def generate_transceivers(self, topo_config):
 
@@ -148,12 +152,14 @@ class QKDTopoExt(Topology):
                     )
 
                     # Edited to include the GlobalGraph reference
+                    # Edited to include the GlobalGraph reference
                     tr_node_p = MessagingProtocol(
                         src_node,
                         "msgp",
                         "msgp",
                         dst_tr_name,
                         self.super_qkd_nodes[super_node_name],
+                        self.gg
                         self.gg
                     )
                     tr_node = Transceiver(src_node, tr_node_p)
@@ -401,6 +407,7 @@ class QKDTopoExt(Topology):
 
                 # packet also contains the route
                 # route = super_node.routing_table[dest[super_node.name]][1:]
+                # route = super_node.routing_table[dest[super_node.name]][1:]
                 # print('SRC: ', super_node.name, 'ROUTE: ',route)
 
                 message = {
@@ -408,6 +415,7 @@ class QKDTopoExt(Topology):
                     "dest": dest[super_node.name],
                     "payload": text,
                     "hop": 0,
+                    # "route": route,
                     # "route": route,
                     "time": None,
                 }
@@ -429,6 +437,7 @@ class QKDTopoExt(Topology):
                         "dest": p,
                         "payload": text,
                         "hop": 0,
+                        # "route": route,
                         # "route": route,
                         "time": None,
                     }
