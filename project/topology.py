@@ -223,6 +223,30 @@ class QKDTopoExt(Topology):
                             writer = csv.writer(file)
                             writer.writerow(row)
 
+
+    def generate_graph(self) -> DiGraph:
+        """
+        Generates a DiGraph with link capacities
+        """
+        graph = DiGraph()
+        edges = []
+        for super_node in self.super_qkd_nodes.values():
+            graph.add_node(super_node.name)
+
+            for tr in super_node.transceivers.values():
+
+                src_node = re.findall("tr_(.*)_to_(.*)", tr.qkd_node.name)[0][0]
+                dst_node = re.findall("tr_(.*)_to_(.*)", tr.qkd_node.name)[0][1]
+
+                dist = 1
+                util = len(tr.qkd_node_p.buffer)/tr.qkd_node_p.buffer_capacity
+                edges.append(
+                    (src_node, dst_node, {"util": util, 'dist': dist})
+                )
+
+        graph.add_edges_from(edges)
+        return graph
+
     def generate_routing_tables(
         self,
         algorithm: (
@@ -235,10 +259,10 @@ class QKDTopoExt(Topology):
         for super_node in self.super_qkd_nodes.values():
             graph.add_node(super_node.name)
             for tr in super_node.transceivers.values():
-
+                # print(super_node.name, tr.qkd_node.name)
                 src_node = re.findall("tr_(.*)_to_(.*)", tr.qkd_node.name)[0][0]
                 dst_node = re.findall("tr_(.*)_to_(.*)", tr.qkd_node.name)[0][1]
-
+                # print(src_node, dst_node)
                 edges.append(
                     (src_node, dst_node, {"weight": 1})
                 )  # grafo usato per routing, mettere
