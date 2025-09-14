@@ -112,7 +112,7 @@ class QKDTopoExt(Topology):
         for node in topo_config[Topology.ALL_NODE]:
             node_name = node[Topology.NAME]
 
-            super_node = SuperQKDNode(node_name, self.routing)
+            super_node = SuperQKDNode(node_name, self.routing, self)
             self.super_qkd_nodes[node_name] = super_node
 
     def generate_transceivers(self, topo_config):
@@ -256,8 +256,8 @@ class QKDTopoExt(Topology):
                 )
 
 
-            n_util = node_buffer_size/node_buffer_capacity
-            graph.add_node(super_node.name, n_util=n_util)
+            util_n = node_buffer_size/node_buffer_capacity
+            graph.add_node(super_node.name, util_n=util_n)
 
         graph.add_edges_from(edges)
         return graph
