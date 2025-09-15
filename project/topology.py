@@ -54,7 +54,7 @@ class QKDTopoExt(Topology):
         # time in picoseconds
         time = 10000000
         for i in range(n):
-            process = Process(self, 'recompute_routing', [f'at time {time/1.0e9}'])
+            process = Process(self, 'recompute_routing', [f'at time {time/1.0e9}s'])
             event = Event(time, process)
             self.timeline.schedule(event)
             time += TIME
