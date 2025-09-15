@@ -39,23 +39,23 @@ def inspect(tl, rate):
             for super_node in network.super_qkd_nodes.values():
                 for tr in super_node.transceivers.values():
                     row_b.append(len(tr.qkd_node_p.buffer))
-            
+
             for super_node in network.super_qkd_nodes.values():
                 for tr in super_node.transceivers.values():
                     row_k.append(len(tr.qkd_node_p.key_manager.keys))
-            
+
             for super_node in network.super_qkd_nodes.values():
                 for tr in super_node.transceivers.values():
                     row_d.append(tr.qkd_node_p.del_mess)
-            
+
             with open(current_sim + 'buffers.csv', 'a') as file:
                 writer = csv.writer(file)
                 writer.writerow(row_b)
-            
+
             with open(current_sim + 'keys.csv', 'a') as file:
                 writer = csv.writer(file)
                 writer.writerow(row_k)
-            
+
             with open(current_sim + 'delivered_p.csv', 'a') as file:
                 writer = csv.writer(file)
                 writer.writerow(row_d)
@@ -82,30 +82,30 @@ def save_metrics():
             for c in tr.qkd_node.cchannels.values():
                 n = re.search('cchannel(.+)_', c.name).group(1)
                 cc[n] = 0
-        
+
         row_4.append(tot_ric)
-    
+
     for super_node in network.super_qkd_nodes.values():
         for tr in super_node.transceivers.values():
             for c in tr.qkd_node.cchannels.values():
                 n = re.search('cchannel(.+)_', c.name).group(1)
                 cc[n] += c.transmitted_bit
-    
+
     for i in cc.keys():
         row_5.append(cc[i])
-    
+
     with open(current_sim + 'tot_keys.csv', 'a') as file:
         writer = csv.writer(file)
         writer.writerow(row_1)
-    
+
     with open(current_sim + 'tot_disc.csv', 'a') as file:
         writer = csv.writer(file)
         writer.writerow(row_2)
-    
+
     with open(current_sim + 'tot_ric_cascade.csv', 'a') as file:
         writer = csv.writer(file)
         writer.writerow(row_3)
-    
+
     with open(current_sim + 'tot_mess_ric.csv', 'a') as file:
         writer = csv.writer(file)
         writer.writerow(row_4)
@@ -130,7 +130,7 @@ def gen_csv_file():
         writer = csv.writer(file)
         header = ['Sim. Command','Source','Destination','Sent','Delivered','Dropped','Num. Hop','Sending Time','Sim. Time','Tot. Time']
         writer.writerow(header)
-    
+
     with open(current_sim + 'buffers.csv', 'w') as file:
         writer = csv.writer(file)
         header = ['Sim. Command','Time']
@@ -146,7 +146,7 @@ def gen_csv_file():
             for tr in super_node.transceivers.values():
                 header.append(tr.qkd_node.name)
         writer.writerow(header)
-    
+
     with open(current_sim + 'tot_keys.csv', 'w') as file:
         writer = csv.writer(file)
         header = ['Sim. Command']
@@ -154,7 +154,7 @@ def gen_csv_file():
             for tr in super_node.transceivers.values():
                 header.append(tr.qkd_node.name)
         writer.writerow(header)
-    
+
     with open(current_sim + 'delivered_p.csv', 'w') as file:
         writer = csv.writer(file)
         header = ['Sim. Command','Time']
@@ -162,7 +162,7 @@ def gen_csv_file():
             for tr in super_node.transceivers.values():
                 header.append(tr.qkd_node.name)
         writer.writerow(header)
-    
+
     with open(current_sim + 'tot_disc.csv', 'w') as file:
         writer = csv.writer(file)
         header = ['Sim. Command']
@@ -170,7 +170,7 @@ def gen_csv_file():
             for tr in super_node.transceivers.values():
                 header.append(tr.qkd_node.name)
         writer.writerow(header)
-    
+
     with open(current_sim + 'tot_ric_cascade.csv', 'w') as file:
         writer = csv.writer(file)
         header = ['Sim. Command']
@@ -178,7 +178,7 @@ def gen_csv_file():
             for tr in super_node.transceivers.values():
                 header.append(tr.qkd_node.name)
         writer.writerow(header)
-    
+
     with open(current_sim + 'tot_mess_ric.csv', 'w') as file:
         writer = csv.writer(file)
         header = ['Sim. Command']
@@ -216,23 +216,23 @@ def sim(graph_json_seq, sim_time, key_size, mess_rate, buff_capacity, inspection
 
     network = QKDTopoExt(graph_json_seq, timeline)
     gen_csv_file()
-    
     network.add_key_managers(key_size, math.inf)
     network.start_pairing()
     tick = time.time()
     network.start_qkd()
+    network.push_recompute_event(sim_time)
     network.start_messaging(timeline, mess_rate, buff_capacity, traffic)
 
     threading.Thread(target = inspect, args = (timeline, inspection_rate), daemon = True).start()
 
     timeline.init()
     timeline.run()
-    
+
     print("Execution time %.2f sec" % (time.time() - tick))
     print("Simulation time %.2f sec" % (timeline.now() * 1.0e-12))
 
     process = psutil.Process()
-    print(process.memory_info().rss/1000000000)  # in bytes 
+    print(process.memory_info().rss/1000000000)  # in bytes
 
 def main():
     global current_sim
@@ -244,9 +244,9 @@ def main():
     graph_json_seq = 'graph_sequence.json'
     traffic_json = 'traffic.json'
     sim_params_json = 'sim_parmas.json'
-    
+
     parser = argparse.ArgumentParser(description='parser')
-    
+
     parser.add_argument('--sim-time', dest='sim_time', type=float, default=5, help='Simulation time in seconds')
     parser.add_argument('--netx-graph', dest='netx_graph', type=str, help='File json for networkX graph')
     parser.add_argument('--seq-graph', dest='seq_graph', type=str, help='File json for sequence graph')
@@ -256,7 +256,7 @@ def main():
     parser.add_argument('--buff-capacity', dest='buff_capacity', type=float, default=10, help='Buffer capacity of the nodes')
     parser.add_argument('--inspection-rate', dest='inspection_rate', type=float, default=0.005, help='Inspection rate')
     parser.add_argument('--traffic', dest='traffic', type=str, default=None, help='File json for traffic')
-    
+
     args = parser.parse_args()
 
     print(f"[Simulation Command] {' '.join(sys.argv[0:])}")
@@ -264,7 +264,7 @@ def main():
     sim_command = ' '.join(sys.argv[0:])
     MessagingProtocol.sim_command = sim_command
     QKDTopoExt.sim_command = sim_command
-    
+
     os.makedirs(os.path.dirname(current_sim), exist_ok=True)
 
     if args.traffic:
@@ -272,7 +272,7 @@ def main():
             js_traffic = json.load(f)
         with open(current_sim + traffic_json, 'w') as f:
             json.dump(js_traffic, f, ensure_ascii=False, indent=4)
-    
+
     with open(current_sim + sim_params_json, 'w') as f:
         f.write(json.dumps(vars(args), indent=4))
 
@@ -282,15 +282,15 @@ def main():
         draw_to_file(graph, current_sim + 'network_graph.png')
         netparse(current_sim + graph_json_ntx, current_sim + graph_json_seq)
         sim(current_sim + graph_json_seq, args.sim_time, args.key_size, args.mess_rate, args.buff_capacity, args.inspection_rate, args.traffic)
-        
-    # Se specificati entrambi i due grafi prendimao quello di sequence  
+
+    # Se specificati entrambi i due grafi prendimao quello di sequence
     elif (args.netx_graph != None and args.seq_graph != None) or (args.netx_graph == None and args.seq_graph != None):
         with open(args.seq_graph, 'r') as f:
             js_graph = json.load(f)
         with open(current_sim + graph_json_seq, 'w') as f:
             json.dump(js_graph, f, ensure_ascii=False, indent=4)
         sim(current_sim + graph_json_seq, args.sim_time, args.key_size, args.mess_rate, args.buff_capacity, args.inspection_rate, args.traffic)
-    
+
     # Se sepcificato solo quello networkX
     elif args.netx_graph != None and args.seq_graph == None:
         with open(args.netx_graph, 'r') as f:
@@ -301,7 +301,7 @@ def main():
             json.dump(js_graph, f, ensure_ascii=False, indent=4)
         netparse(current_sim + graph_json_ntx, current_sim + graph_json_seq)
         sim(current_sim + graph_json_seq, args.sim_time, args.key_size, args.mess_rate, args.buff_capacity, args.inspection_rate, args.traffic)
-    
+
     save_metrics()
 
     print("Bye!")
@@ -311,5 +311,5 @@ def main():
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, handler) # ctlr + c
-    signal.signal(signal.SIGTSTP, handler) # ctlr + z 
+    signal.signal(signal.SIGTSTP, handler) # ctlr + z
     main()

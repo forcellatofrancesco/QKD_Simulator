@@ -3,3 +3,4 @@ project/sim/**/
 project/simulations/**/
 project/file/**/
 .venv
+.venv2
