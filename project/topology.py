@@ -11,6 +11,8 @@ from transceiver import Transceiver
 from messaging import MessagingProtocol
 from key_manager import KeyManager
 from qber import FSOQKD
+from global_graph import GlobalGraph
+from global_graph import GlobalGraph
 
 from path_algorithms import gready_approach
 
@@ -98,6 +100,8 @@ class QKDTopoExt(Topology):
         self.timeline = tl
         self._algorithm = algorithm
         self.routing = routing
+        self.gg = GG
+        self.gg = GG
         super().__init__(conf_file_name)
 
     def _load(self, filename):
@@ -106,15 +110,18 @@ class QKDTopoExt(Topology):
         self.generate_super_nodes(topo_config)
         self.generate_transceivers(topo_config)
         self.add_channels(topo_config)
-        self.generate_routing_tables(self._algorithm)
+        # self.generate_routing_tables(self._algorithm)
+        # self.generate_routing_tables(self._algorithm)
 
     def generate_super_nodes(self, topo_config):
         for node in topo_config[Topology.ALL_NODE]:
             node_name = node[Topology.NAME]
 
-            super_node = SuperQKDNode(node_name, self.routing)
+            super_node = SuperQKDNode(node_name, self.routing, self)
             self.super_qkd_nodes[node_name] = super_node
 
+    # Edited to include the GlobalGraph reference
+    # Edited to include the GlobalGraph reference
     def generate_transceivers(self, topo_config):
 
         trs = {}
@@ -144,12 +151,16 @@ class QKDTopoExt(Topology):
                         src_tr_name, self.timeline, component_templates=ls_arg
                     )
 
+                    # Edited to include the GlobalGraph reference
+                    # Edited to include the GlobalGraph reference
                     tr_node_p = MessagingProtocol(
                         src_node,
                         "msgp",
                         "msgp",
                         dst_tr_name,
                         self.super_qkd_nodes[super_node_name],
+                        self.gg
+                        self.gg
                     )
                     tr_node = Transceiver(src_node, tr_node_p)
 
@@ -223,6 +234,45 @@ class QKDTopoExt(Topology):
                             writer = csv.writer(file)
                             writer.writerow(row)
 
+
+    def generate_graph(self) -> DiGraph:
+        """
+        Generates a DiGraph with link and node utilizations.
+        Utilization of link u,v is utilization of transceiver from node u to node v.
+        Utilization of node u is combined utilization of its all outgoing transceivers.
+        """
+
+        graph = DiGraph()
+        edges = []
+        for super_node in self.super_qkd_nodes.values():
+
+
+            node_buffer_capacity = 0
+            node_buffer_size = 0
+            for tr in super_node.transceivers.values():
+
+                src_node = re.findall("tr_(.*)_to_(.*)", tr.qkd_node.name)[0][0]
+                dst_node = re.findall("tr_(.*)_to_(.*)", tr.qkd_node.name)[0][1]
+
+                dist = 1
+                tr_buffer_capacity = tr.qkd_node_p.buffer_capacity
+                tr_buffer_size = len(tr.qkd_node_p.buffer)
+
+                node_buffer_capacity += tr_buffer_capacity
+                node_buffer_size += tr_buffer_size
+
+                util = tr_buffer_size/tr_buffer_capacity
+                edges.append(
+                    (src_node, dst_node, {"util": util, 'dist': dist})
+                )
+
+
+            util_n = node_buffer_size/node_buffer_capacity
+            graph.add_node(super_node.name, util_n=util_n)
+
+        graph.add_edges_from(edges)
+        return graph
+
     def generate_routing_tables(
         self,
         algorithm: (
@@ -235,10 +285,10 @@ class QKDTopoExt(Topology):
         for super_node in self.super_qkd_nodes.values():
             graph.add_node(super_node.name)
             for tr in super_node.transceivers.values():
-
+                # print(super_node.name, tr.qkd_node.name)
                 src_node = re.findall("tr_(.*)_to_(.*)", tr.qkd_node.name)[0][0]
                 dst_node = re.findall("tr_(.*)_to_(.*)", tr.qkd_node.name)[0][1]
-
+                # print(src_node, dst_node)
                 edges.append(
                     (src_node, dst_node, {"weight": 1})
                 )  # grafo usato per routing, mettere
@@ -356,7 +406,8 @@ class QKDTopoExt(Topology):
                 text = list(text)
 
                 # packet also contains the route
-                route = super_node.routing_table[dest[super_node.name]][1:]
+                # route = super_node.routing_table[dest[super_node.name]][1:]
+                # route = super_node.routing_table[dest[super_node.name]][1:]
                 # print('SRC: ', super_node.name, 'ROUTE: ',route)
 
                 message = {
@@ -364,7 +415,8 @@ class QKDTopoExt(Topology):
                     "dest": dest[super_node.name],
                     "payload": text,
                     "hop": 0,
-                    "route": route,
+                    # "route": route,
+                    # "route": route,
                     "time": None,
                 }
                 message = json.dumps(message)
@@ -385,7 +437,8 @@ class QKDTopoExt(Topology):
                         "dest": p,
                         "payload": text,
                         "hop": 0,
-                        "route": route,
+                        # "route": route,
+                        # "route": route,
                         "time": None,
                     }
                     message = json.dumps(message)

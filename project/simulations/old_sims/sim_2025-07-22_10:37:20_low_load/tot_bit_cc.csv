@@ -1,0 +1,2 @@
+Sim. Command,cc0,cc1,cc2,cc3,cc4,cc5,cc6,cc7,cc8,cc9,cc10,cc11,cc12,cc13
+project/sim_ext.py --sim-time 7.5 --seq-graph project/file/graph_15_nodes.json --traffic project/file/traffic_15_nodes_net.json --inspection-rate 0.001 --mess-rate 0.01,3045,7742,5202,8894,8037,3150,2656,7546,6002,8086,8469,5192,2905,5964,5567,8508,2917,1862,4924,7996,1120,1718
