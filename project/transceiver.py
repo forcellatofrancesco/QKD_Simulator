@@ -11,7 +11,7 @@ class Transceiver:
     def __init__(self, qkd_node, qkd_node_p):
         self.qkd_node = qkd_node
         self.qkd_node_p = qkd_node_p
-        self.qkd_node_km = None
+        self.qkd_node_km = None                 # KeyManager object
 
     def add_key_manager(self, qkd_node_km):
         self.qkd_node_km = qkd_node_km

@@ -149,12 +149,14 @@ class MessagingProtocol(Protocol):
                 packet["time"] * 1.0e-12, self.own.timeline.now() * 1.0e-12, 
                 (self.own.timeline.now() * 1.0e-12) - (packet["time"] * 1.0e-12))
             
+            # Commenting prints to fasten the simulation
             print(f"[{self.own.name}]\nMessage received. At simulation time: {self.own.timeline.now() * 1.0e-12} s\n")
             print(f"Encrypted Message: {message}")
             print(f"Decrypted Message: {plaintext}\n")
 
         else:
             packet["payload"] = list(plaintext)
+            # Commenting prints to fasten the simulation
             print(f"[{self.own.name}]\nMessage received. At simulation time: {self.own.timeline.now() * 1.0e-12} s. Forwarding ...\n")
             print(f"Encrypted Message: {message}")
             print(f"Decrypted Message: {plaintext}\n")

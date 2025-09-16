@@ -7,8 +7,10 @@ from sequence.qkd.BB84 import pair_bb84_protocols
 from sequence.qkd.cascade import pair_cascade_protocols
 from sequence.kernel.process import Process
 from sequence.kernel.event import Event
+from centflow import centflow
 
 from networkx import DiGraph, exception, shortest_path
+from networkx.readwrite import json_graph
 
 from super_qkd_node import SuperQKDNode
 from transceiver import Transceiver
@@ -20,6 +22,7 @@ import re
 import json
 import random
 import csv
+import os
 
 class QKDTopoExt(Topology):
 
@@ -34,6 +37,8 @@ class QKDTopoExt(Topology):
     def __init__(self, conf_file_name: str, tl):
         self.super_qkd_nodes = {}
         self.timeline = tl
+        self.graph: DiGraph = None
+        self.num_saves = 0
         super().__init__(conf_file_name)
 
     def _load(self, filename):
@@ -45,22 +50,51 @@ class QKDTopoExt(Topology):
         self.generate_routing_tables()
 
 
+    def recompute_routing_tables(self, tl, period=0.1): 
+        print(f"Recomputing routing table at: {tl.now()}")
+        period_ps = period * 1.0e12 
+        # What it has to be done at each utilization update
+        # This function creates a new directed graph and then computes best paths for each
+        # pair of nodes. The weight of the graph is the key utilization
+        for super_node in self.super_qkd_nodes.values():
+            for tr in super_node.transceivers.values():
+                usage = tr.qkd_node_km.utilization()
 
-    def push_recompute_event(self, sim_time, period = 0.01):
-        n = int(sim_time/period)
-        print(n)
+                src_node = re.findall('tr_(.*)_to_(.*)', tr.qkd_node.name)[0][0]
+                dst_node = re.findall('tr_(.*)_to_(.*)', tr.qkd_node.name)[0][1]
 
-        TIME = 10000000
-        # time in picoseconds
-        time = 10000000
-        for i in range(n):
-            process = Process(self, 'recompute_routing', [f'at time {time/1.0e9}s'])
-            event = Event(time, process)
-            self.timeline.schedule(event)
-            time += TIME
+                # To change the weights assigned, weights now become link utilization
+                # To check name of attribute
+                self.graph[src_node][dst_node]["weight"] = usage
 
-    def recompute_routing(self, msg):
-        print(f'[Recomputing routing] {msg}')
+        for src in self.graph.nodes:
+            for dst in self.graph.nodes:
+                if src == dst:
+                    continue
+                try:
+                    # Calling CentFlow algorithm, link utilization is stored in the weight attribute
+                    path = centflow(self.graph, source=src, target=dst)
+                    self.super_qkd_nodes[src].routing_table[dst] = path
+
+                except exception.NetworkXNoPath:
+                    pass
+
+        data = json_graph.node_link_data(self.graph)
+        folder = os.path.join(self.sim_path, "graph")
+        os.makedirs(folder, exist_ok=True)
+        filepath = os.path.join(folder, f"graph{self.num_saves}.json")
+
+        with open(filepath, "w") as f:
+            json.dump(data, f, indent=2)
+        
+        self.num_saves += 1
+        
+        # schedule the next recompute 
+        next_time = tl.now() + period_ps 
+        process_next = Process(self, "recompute_routing_tables", [tl]) 
+        event_next = Event(next_time, process_next) 
+        tl.schedule(event_next) 
+
 
     def generate_super_nodes(self, topo_config):
         for node in topo_config[Topology.ALL_NODE]:
@@ -161,10 +195,10 @@ class QKDTopoExt(Topology):
 
 
     def generate_routing_tables(self):
-        graph = DiGraph()
+        self.graph = DiGraph()
         edges = []
         for super_node in self.super_qkd_nodes.values():
-            graph.add_node(super_node.name)
+            self.graph.add_node(super_node.name)
             for tr in super_node.transceivers.values():
 
                 src_node = re.findall('tr_(.*)_to_(.*)', tr.qkd_node.name)[0][0]
@@ -173,18 +207,29 @@ class QKDTopoExt(Topology):
                 edges.append((src_node, dst_node, {"weight": 1})) # grafo usato per routing, mettere
                                                                   # peso legato al canale classico? Da chiedere.
 
-        graph.add_edges_from(edges)
+        self.graph.add_edges_from(edges)
 
-        for src in graph.nodes:
-            for dst in graph.nodes:
+        for src in self.graph.nodes:
+            for dst in self.graph.nodes:
                 if src == dst:
                     continue
                 try:
-                    path = shortest_path(graph, source=src, target=dst, weight="weight")
+                    path = shortest_path(self.graph, source=src, target=dst, weight="weight")
                     self.super_qkd_nodes[src].routing_table[dst] = path
 
                 except exception.NetworkXNoPath:
                     pass
+
+        data = json_graph.node_link_data(self.graph)
+        folder = os.path.join(self.sim_path, "graph")
+        os.makedirs(folder, exist_ok=True)
+        filepath = os.path.join(folder, f"graph{self.num_saves}.json")
+
+        with open(filepath, "w") as f:
+            json.dump(data, f, indent=2)
+        
+        self.num_saves += 1
+
 
     def add_key_managers(self, key_size, num_keys):
         for super_node in self.super_qkd_nodes.values():

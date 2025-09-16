@@ -2,67 +2,47 @@ import networkx as nx
 from networkx import DiGraph
 import heapq
 
+def effective_degree(G, node, thresh):
+    neighbors = list(G.neighbors(node))
+    return sum(
+        1 for nbr in neighbors if G[node][nbr]["weight"] < thresh
+    )
 
-def effective_degree(graph: DiGraph, u, v, tau_n, tau_e):
-    if graph[u][v]['util'] > tau_e:
-        graph.remove_edge(u, v)
-
-    if graph.nodes[u]['util_n'] > tau_n:
-        for e in graph.neighbors(u):
-            graph.remove_edge(u, e)
-
-    return graph.degree[u]
-
-def centflow(graph: DiGraph, source, target, tau_n = 0.9, tau_e = 0.8):
-
-
+def centflow(graph: DiGraph, source, target, tau_e = 0.95) -> list | dict:
+    queue = []
     node_centrality = nx.betweenness_centrality(graph)
     edge_centrality = nx.edge_betweenness_centrality(graph)
 
-    dist = {node: float("inf") for node in graph.nodes}
-    dist[source] = 0
-
-    pred = {}
-    queue = [(dist[node], node) for node in graph.nodes]
-    heapq.heapify(queue)
+    heapq.heappush(queue, (0, source, []))
     visited = set()
 
     while queue:
-        d, u = heapq.heappop(queue)
-
-        if u in visited:
+        cost, node, path = heapq.heappop(queue)
+        if node in visited:
             continue
-        visited.add(u)
+        visited.add(node)
+        path = path + [node]
 
-        if u == target:
-            break
+        if node == target:
+            return path
 
-        for v in graph.neighbors(u):
+        for neighbor in graph.neighbors(node):
+            if neighbor in visited:
+                continue
 
-            cnb = node_centrality[v]
-            ceb = edge_centrality[(u,v)]
-            ed = effective_degree(graph, u, v, tau_n, tau_e)
+            # After the graph recomputation, weight holds the utilization of the link
+            e_util = graph[node][neighbor]["weight"]
 
-            new_dist = dist[u]\
-                        + graph.nodes[v]['util_n'] * cnb * ed\
-                        + graph[u][v]['util'] * ceb
+            cnb = node_centrality[neighbor]
+            ceb = edge_centrality.get(
+                (node, neighbor), edge_centrality.get((neighbor, node), 0)
+            )
+            deg_eff = effective_degree(graph, neighbor, tau_e)
+            node_weight = cnb * deg_eff
+            edge_weight = e_util * ceb
+            weight = node_weight + edge_weight + 1e-6
 
-            if dist[v] > new_dist:
-                dist[v] = new_dist
-                pred[v] = u
-
-    # computing next hop
-    t = target
-    while pred[t] != source:
-        t = pred[t]
-
-    return t
-
+            heapq.heappush(queue, (cost + weight, neighbor, path))
+    return []  # No path found
 
 
-
-
-
-
-
-    pass

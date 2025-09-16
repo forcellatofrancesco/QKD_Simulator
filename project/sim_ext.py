@@ -1,5 +1,7 @@
 from sequence.kernel.timeline import Timeline
 import sequence.utils.log as log
+from sequence.kernel.process import Process
+from sequence.kernel.event import Event
 
 from topology import QKDTopoExt
 from messaging import MessagingProtocol
@@ -220,8 +222,11 @@ def sim(graph_json_seq, sim_time, key_size, mess_rate, buff_capacity, inspection
     network.start_pairing()
     tick = time.time()
     network.start_qkd()
-    network.push_recompute_event(sim_time)
     network.start_messaging(timeline, mess_rate, buff_capacity, traffic)
+    period = 0.1 * 1e12
+    first_process = Process(network, "recompute_routing_tables", [timeline])
+    first_event = Event(timeline.now() + period, first_process)
+    timeline.schedule(first_event)
 
     threading.Thread(target = inspect, args = (timeline, inspection_rate), daemon = True).start()
 
