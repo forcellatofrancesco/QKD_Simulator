@@ -1,0 +1,11 @@
+{
+    "sim_time": 7.5,
+    "netx_graph": null,
+    "seq_graph": "project/file/graph_15_nodes.json",
+    "key_size": 128,
+    "mess_rate": 0.01,
+    "num_nodes": 10,
+    "buff_capacity": 10,
+    "inspection_rate": 0.001,
+    "traffic": "project/file/traffic_15_nodes_net.json"
+}
